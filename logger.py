@@ -7,6 +7,7 @@ from termcolor import colored as coloured
 from datetime import datetime as dt
 from dateutil import tz
 from typing import Optional
+import traceback
 
 class Logger():
     def __init__(self, debug:bool=True, verbose:bool=True, write:bool=False, **kwargs):
