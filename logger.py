@@ -1,22 +1,20 @@
 #!/usr/bin/env python3
-# Author      : @divorcedrsakey
-# Description : Panda. A place for all my shite. Rewrites for the win.
-# Version     : 0.0.1
+# Author      : sheeptank
+# Description : A generally awful logger script with some debug functionality.
+# Version     : 0.0.2
 
 from termcolor import colored as coloured
 from datetime import datetime as dt
 from dateutil import tz
+from typing import Optional
 
 class Logger():
-    def __init__(
-        self, debug:bool=True, verbose:bool=True, write:bool=False, **kwargs
-    ):
+    def __init__(self, debug:bool=True, verbose:bool=True, write:bool=False, **kwargs):
         self.verbose = verbose
         self._debug  = debug
         self.write   = write
         self.kwargs  = kwargs
-        self.logName = kwargs.get("logName") if kwargs.get("logName") is not None else "log.panda"
-
+        self.logName = kwargs.get("logName") if kwargs.get("logName") is not None else "log.baalib"
         self.tz        = tz.gettz(kwargs.get("tzinfo")) if kwargs.get("tzinfo") else None
         self.timestamp = self.kwargs.get("timestamp") if self.kwargs.get("timestamp") else True
 
@@ -29,7 +27,7 @@ class Logger():
         else:
             return f"[{dt.now(tz=self.tz).ctime()}] "
 
-    def _createLog(self, **kwargs) -> str|None:
+    def _createLog(self, **kwargs) -> Optional[str]:
 
         logTypes = {
             "info":   "[-]",
@@ -52,7 +50,6 @@ class Logger():
         logType    = kwargs.get("logType")
         logMessage = kwargs.get("logMessage")
 
-        
         details = {
             "timestamp": [kwargs.get("timestamp"), self.timestamp],
             "write"    : [kwargs.get("write"), self.write],
@@ -100,3 +97,9 @@ class Logger():
     def debug(self, logMessage, **kwargs):
         kwargs = {"logType":"debug", "logMessage":logMessage, **kwargs}
         self._createLog(**kwargs)
+
+    def traceback(self, function):
+        def wrapper(*args, **kwargs):
+            try: function(*args, **kwargs)
+            except Exception as e: self._createLog(**{"logType":"error", "logMessage":str(e)+f"\nPositional Arguments: {repr(args)}, Keyword Arguments: {repr(kwargs)}"+"\n"+traceback.format_exc()})
+        return wrapper
