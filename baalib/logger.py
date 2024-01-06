@@ -12,14 +12,14 @@ class Logger():
         self.write   = write
         self.kwargs  = kwargs
         self.logName = kwargs.get("logName") if kwargs.get("logName") is not None else "log.baalib"
-        
+
         self.tz        = tz.gettz(kwargs.get("tzinfo")) if kwargs.get("tzinfo") else None
         self.timestamp = self.kwargs.get("timestamp") if self.kwargs.get("timestamp") else True
 
     def _getTimestamp(self, timestamp):
         if not timestamp:
             return f""
-    
+
         if self.tz is None:
             return f"[{dt.utcnow().ctime()}] "
         else:
@@ -73,19 +73,19 @@ class Logger():
     def log(self, logMessage, **kwargs):
         kwargs = {"logType":"info", "logMessage":logMessage, **kwargs}
         self._createLog(**kwargs)
-    
+
     def warn(self, logMessage, **kwargs):
         kwargs = {"logType":"warn", "logMessage":logMessage, **kwargs}
         self._createLog(**kwargs)
-    
+
     def success(self, logMessage, **kwargs):
         kwargs = {"logType":"success", "logMessage":logMessage, **kwargs}
         self._createLog(**kwargs)
-    
+
     def error(self, logMessage, **kwargs):
         kwargs = {"logType":"error", "logMessage":logMessage, **kwargs}
         self._createLog(**kwargs)
-    
+
     def fatal(self, logMessage, **kwargs):
         kwargs = {"logType":"fatal", "logMessage":logMessage, **kwargs}
         self._createLog(**kwargs)
