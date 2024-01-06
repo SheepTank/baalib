@@ -26,6 +26,9 @@ class Logger():
 
     def _createLog(self, **kwargs) -> Optional[str]:
 
+        logType    = kwargs.get("logType")
+        logMessage = kwargs.get("logMessage")
+
         logTypes = {
             "info":   "[-]",
             "warn":   "[w]",
@@ -44,9 +47,6 @@ class Logger():
             "fatal": {"color": "red", "attrs": ["reverse"]}
         }
 
-        logType    = kwargs.get("logType")
-        logMessage = kwargs.get("logMessage")
-
         details = {
             "timestamp": [kwargs.get("timestamp"), self.timestamp],
             "write"    : [kwargs.get("write"), self.write],
@@ -54,10 +54,10 @@ class Logger():
             "verbose"  : [kwargs.get("verbose"), self.verbose]
         }
 
-        write      = details["write"][0] if details["write"][0] is not None else details["write"][1]
-        debug      = details["debug"][0] if details["debug"][0] is not None else details["debug"][1]
-        verbose    = details["verbose"][0] if details["verbose"][0] is not None else details["verbose"][1]
-        timestamp  = details["timestamp"][0] if details["timestamp"][0] is not None else details["timestamp"][1]
+        write     = details["write"][0] if details["write"][0] is not None else details["write"][1]
+        debug     = details["debug"][0] if details["debug"][0] is not None else details["debug"][1]
+        verbose   = details["verbose"][0] if details["verbose"][0] is not None else details["verbose"][1]
+        timestamp = details["timestamp"][0] if details["timestamp"][0] is not None else details["timestamp"][1]
 
         end = kwargs.get("end") if kwargs.get("end") is not None else "\n"
 
