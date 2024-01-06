@@ -61,6 +61,10 @@ class Logger():
         end = kwargs.get("end") if kwargs.get("end") is not None else "\n"
 
         entry = " ".join([self._getTimestamp(timestamp)+logTypes[logType], logMessage])
+
+        if "traceback" in kwargs:
+            entry+="\n"+kwargs["traceback"]
+
         colouredEntry = coloured(entry, **termColours[logType])
 
         if write:
