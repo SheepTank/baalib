@@ -1,15 +1,16 @@
-## baalib
+# baalib
 
-#### Logger
+## Logger
 A custom written logger with some basic debugging features.
 
-## Description
-The baalib.logger.Logger is a module which I started developing years ago to stop me rewriting code and to make my particularly print-function debuging less painful.
+### Description
+The Logger class (baalib.logger.Logger) started development years ago, because I got bored of print statements. So what did I do? Make more printstatements. Previous iterations of this module had additional functionality which will eventually come back. Features such as webhook support, and debugging functionality which showed roughly where the debug function was called (because `logger.debug("this")` only ever got me so far...)
 
-## Logger: Features
+#### Logger: Features
 Once initialised:
 ```python
-logger = panda.Logger(logName='log.baalib', verbose=True, write=True, debug=True)
+from baalib.logger import Logger
+logger = Logger(logName='log.baalib', verbose=True, write=True, debug=True)
 ```
 The logger has the following options:
 ```python
@@ -57,12 +58,11 @@ logger.log('Something happened...', logType='plus')
 # Options include:
 # plus [+], info [-], error [!], debug [D], warn [W]
 ```
-
-### All Options
+All Options
 ```python
-logger.log("Log message.", logType="error", write=False, verbose=True)
-# Options are set to true by default.
+logger.log("Log message.", logType="error", write=False, verbose=True, debug=True)
+# Options are set to true by default, or defined within the class initialisation.
 ```
 
-#### Networking
+## Networking
 A collection of useful functions for networking in python.
