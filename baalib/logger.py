@@ -59,10 +59,8 @@ class Logger():
         verbose   = details["verbose"][0] or details["verbose"][1]
         timestamp = details["timestamp"][0] or details["timestamp"][1]
 
-        end = kwargs.get("end") if kwargs.get("end") is not None else "\n"
-
+        end = kwargs.get("end") or "\n"
         entry = " ".join([self._getTimestamp(timestamp)+logTypes[logType], logMessage])
-
         if "traceback" in kwargs:
             entry+="\n"+kwargs["traceback"]
 
