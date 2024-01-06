@@ -12,6 +12,7 @@ class Logger():
         self.write   = write
         self.kwargs  = kwargs
         self.logName = kwargs.get("logName") if kwargs.get("logName") is not None else "log.baalib"
+        
         self.tz        = tz.gettz(kwargs.get("tzinfo")) if kwargs.get("tzinfo") else None
         self.timestamp = self.kwargs.get("timestamp") if self.kwargs.get("timestamp") else True
 
@@ -30,12 +31,8 @@ class Logger():
         logMessage = kwargs.get("logMessage")
 
         logTypes = {
-            "info":   "[-]",
-            "warn":   "[w]",
-            "success":"[+]",
-            "error":  "[!]",
-            "fatal":  "[!]",
-            "debug":  "[D]"
+            "info":   "[-]", "warn":   "[w]", "success":"[+]",
+            "error":  "[!]", "fatal":  "[!]", "debug":  "[D]"
         }
 
         termColours = {
