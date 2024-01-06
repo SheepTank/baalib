@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "baalib"
-version = "0.0.3"
-description = "A collection of code regularly "
+version = "0.0.5"
+description = "A collection of code used regularly."
 authors = ["SheepTank <104634919+SheepTank@users.noreply.github.com>"]
 license = "Apache-2.0"
 

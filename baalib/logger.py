@@ -3,6 +3,7 @@ from datetime import datetime as dt
 from dateutil import tz
 from typing import Optional
 import traceback
+import inspect
 
 class Logger():
     def __init__(self, debug:bool=True, verbose:bool=True, write:bool=False, **kwargs):
@@ -95,7 +96,10 @@ class Logger():
         self._createLog(**kwargs)
 
     def debug(self, logMessage, **kwargs):
-        kwargs = {"logType":"debug", "logMessage":logMessage, **kwargs}
+        callingFrame = inspect.currentframe().f_back
+        functionName = callingFrame.f_code.co_name
+        lineNumber = callingFrame.f_lineno
+        kwargs = {"logType":"debug", "logMessage":f"({functionName}:{lineNumber}) {logMessage}", **kwargs}
         self._createLog(**kwargs)
 
     def traceback(self, function):
