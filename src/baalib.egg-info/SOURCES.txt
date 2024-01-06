@@ -1,0 +1,10 @@
+LICENSE
+README.md
+pyproject.toml
+src/__init__.py
+src/logger.py
+src/networking.py
+src/baalib.egg-info/PKG-INFO
+src/baalib.egg-info/SOURCES.txt
+src/baalib.egg-info/dependency_links.txt
+src/baalib.egg-info/top_level.txt

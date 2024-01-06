@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "baalib"
+version = "0.0.2"
+authors = [
+  { name="SheepTank", email="104634919+SheepTank@users.noreply.github.com" },
+]
+description = "A package containing my regularly used code."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/sheeptank/baalib"
+Issues = "https://github.com/sheeptank/baalib/issues"

@@ -1,0 +1,21 @@
+Metadata-Version: 2.1
+Name: baalib
+Version: 0.0.2
+Summary: A package containing my regularly used code.
+Author-email: SheepTank <104634919+SheepTank@users.noreply.github.com>
+Project-URL: Homepage, https://github.com/sheeptank/baalib
+Project-URL: Issues, https://github.com/sheeptank/baalib/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+## baalib
+
+#### Logger
+A custom written logger with some basic debugging features.
+
+#### Networking
+A collection of useful functions for networking in python.
