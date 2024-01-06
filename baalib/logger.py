@@ -54,10 +54,10 @@ class Logger():
             "verbose"  : [kwargs.get("verbose"), self.verbose]
         }
 
-        write     = details["write"][0] if details["write"][0] is not None else details["write"][1]
-        debug     = details["debug"][0] if details["debug"][0] is not None else details["debug"][1]
-        verbose   = details["verbose"][0] if details["verbose"][0] is not None else details["verbose"][1]
-        timestamp = details["timestamp"][0] if details["timestamp"][0] is not None else details["timestamp"][1]
+        write     = details["write"][0] or details["write"][1]
+        debug     = details["debug"][0] or details["debug"][1]
+        verbose   = details["verbose"][0] or details["verbose"][1]
+        timestamp = details["timestamp"][0] or details["timestamp"][1]
 
         end = kwargs.get("end") if kwargs.get("end") is not None else "\n"
 
