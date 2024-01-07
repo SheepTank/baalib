@@ -1,34 +1,43 @@
-from termcolor import colored as coloured
-from datetime import datetime as dt
-from dateutil import tz
+from termcolor import colored as coloured  # For colourful messages within terminals
+from datetime import datetime as dt  # For timestamp support
+from dateutil import tz  # For timezone modification of timestamp 
 from typing import Optional
-import traceback
-import inspect
+
+import traceback  # For traceback support
+import inspect    # For additional logger.debug information
+import socket     # For remote logging
+import json       # For json support
 
 class Logger():
-    def __init__(self, debug:bool=True, verbose:bool=True, write:bool=False, **kwargs):
+    def __init__(self, debug:bool=True, verbose:bool=True, write:bool=False, json:bool=False, connection:tuple=None, **kwargs):
         self.verbose = verbose
         self._debug  = debug
         self.write   = write
+        self.json    = json
+        self.logName = kwargs.get("logName") or "log.baalib"
+        self.tzinfo  = kwargs.get("tzinfo")
         self.kwargs  = kwargs
-        self.logName = kwargs.get("logName") if kwargs.get("logName") is not None else "log.baalib"
 
-        self.tz        = tz.gettz(kwargs.get("tzinfo")) if kwargs.get("tzinfo") else None
-        self.timestamp = self.kwargs.get("timestamp") if self.kwargs.get("timestamp") else True
+        self.timestamp  = kwargs.get("timestamp") or True
+        self.connection = connection
+        self.socket     = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         self.__logTypes = {
             "info":   "[-]", "warn":   "[w]", "success":"[+]",
             "error":  "[!]", "fatal":  "[!]", "debug":  "[D]"
         }
 
-    def _getTimestamp(self, timestamp):
-        if not timestamp:
-            return f""
+        # Try to connect to the endpoint
+        try:
+            self.socket.connect(self.connection)
+        except:
+            self.error(f"Failed to connect to specified endpoint. Remote logging unavailable.", traceback=traceback.format_exc())
 
-        if self.tz is None:
-            return f"[{dt.utcnow().ctime()}] "
-        else:
-            return f"[{dt.now(tz=self.tz).ctime()}] "
+    def _getTimestamp(self):
+        if self.json:
+            return f"{dt.utcnow().ctime()}" if self.tzinfo is None else f"{dt.now(tz=self.tzinfo).ctime()}"
+
+        return f"[{dt.utcnow().ctime()}]" if self.tzinfo is None else f"[{dt.now(tz=self.tzinfo).ctime()}]"
 
     def _createLog(self, **kwargs) -> Optional[str]:
 
@@ -44,24 +53,42 @@ class Logger():
             "fatal": {"color": "red", "attrs": ["reverse"]}
         }
 
-        write     = kwargs.get("write") or self.write
-        debug     = kwargs.get("debug") or self._debug
-        verbose   = kwargs.get("verbose") or self.verbose
-        timestamp = kwargs.get("timestamp") or self.timestamp
+        write     = kwargs.get("write") if "write" in kwargs else self.write
+        debug     = kwargs.get("debug") if "debug" in kwargs else self._debug
+        verbose   = kwargs.get("verbose") if "verbose" in kwargs else self.verbose
+        timestamp = kwargs.get("timestamp") if "timestamp" in kwargs else self.timestamp
+        end       = kwargs.get("end") if "end" in kwargs else "\n"
 
-        end = kwargs.get("end") or "\n"
-        entry = " ".join([self._getTimestamp(timestamp)+self.__logTypes[logType], logMessage])
-        if "traceback" in kwargs:
-            entry+="\n"+kwargs["traceback"]
+        if not self.json:
+            entry = " ".join([self._getTimestamp(), self.__logTypes[logType], logMessage])
+        else:
+            entry = {"timestamp":self._getTimestamp(), "type":logType, "value":logMessage}
+
+        if (traceback:=kwargs.get("traceback")) is not None:
+            if not isinstance(entry, dict): entry+="\n"+traceback
+            else: entry["traceback"] = traceback
 
         colouredEntry = coloured(entry, **termColours[logType])
 
         if write:
             open(self.logName,"a").write(entry+"\n")
-        if logType != "debug" and verbose:
+        
+        if not verbose:
+            pass
+        elif logType == "debug" and not debug:
+                pass
+        else:
             print(colouredEntry, end=end)
-        if logType == "debug" and debug:
-            print(colouredEntry, end=end)
+
+        if self.connection is not None:
+            if isinstance(entry, dict):
+                entry = json.dumps(entry, indent=4)
+            try:
+                self.socket.send(f"{entry}\n".encode())
+            except:
+                self.socket.connect(self.connection)
+            finally:
+                self.socket.send(f"{entry}\n".encode())
 
     def log(self, logMessage, **kwargs):
         kwargs = {"logType":"info", "logMessage":logMessage, **kwargs}
