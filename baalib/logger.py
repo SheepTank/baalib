@@ -1,6 +1,5 @@
 from termcolor import colored as coloured  # For colourful messages within terminals
 from datetime import datetime as dt  # For timestamp support
-from dateutil import tz  # For timezone modification of timestamp 
 from typing import Optional
 
 import traceback  # For traceback support
