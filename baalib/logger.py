@@ -16,6 +16,11 @@ class Logger():
         self.tz        = tz.gettz(kwargs.get("tzinfo")) if kwargs.get("tzinfo") else None
         self.timestamp = self.kwargs.get("timestamp") if self.kwargs.get("timestamp") else True
 
+        self.__logTypes = {
+            "info":   "[-]", "warn":   "[w]", "success":"[+]",
+            "error":  "[!]", "fatal":  "[!]", "debug":  "[D]"
+        }
+
     def _getTimestamp(self, timestamp):
         if not timestamp:
             return f""
@@ -30,11 +35,6 @@ class Logger():
         logType    = kwargs.get("logType")
         logMessage = kwargs.get("logMessage")
 
-        logTypes = {
-            "info":   "[-]", "warn":   "[w]", "success":"[+]",
-            "error":  "[!]", "fatal":  "[!]", "debug":  "[D]"
-        }
-
         termColours = {
             "error": {"color": "red"},
             "info": {"color":None, "attrs":[]},
@@ -44,20 +44,13 @@ class Logger():
             "fatal": {"color": "red", "attrs": ["reverse"]}
         }
 
-        details = {
-            "timestamp": [kwargs.get("timestamp"), self.timestamp],
-            "write"    : [kwargs.get("write"), self.write],
-            "debug"    : [kwargs.get("debug"), self._debug],
-            "verbose"  : [kwargs.get("verbose"), self.verbose]
-        }
-
-        write     = details["write"][0] or details["write"][1]
-        debug     = details["debug"][0] or details["debug"][1]
-        verbose   = details["verbose"][0] or details["verbose"][1]
-        timestamp = details["timestamp"][0] or details["timestamp"][1]
+        write     = kwargs.get("write") or self.write
+        debug     = kwargs.get("debug") or self._debug
+        verbose   = kwargs.get("verbose") or self.verbose
+        timestamp = kwargs.get("timestamp") or self.timestamp
 
         end = kwargs.get("end") or "\n"
-        entry = " ".join([self._getTimestamp(timestamp)+logTypes[logType], logMessage])
+        entry = " ".join([self._getTimestamp(timestamp)+self.__logTypes[logType], logMessage])
         if "traceback" in kwargs:
             entry+="\n"+kwargs["traceback"]
 
