@@ -28,7 +28,8 @@ class Logger():
 
         # Try to connect to the endpoint
         try:
-            self.socket.connect(self.connection)
+            if self.connection is not None:
+                self.socket.connect(self.connection)
         except:
             self.error(f"Failed to connect to specified endpoint. Remote logging unavailable.", traceback=traceback.format_exc())
 
